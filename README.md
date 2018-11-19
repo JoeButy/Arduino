@@ -1,2 +1,2 @@
 # Arduino
-Coding for my Arduino
+Coding for Arduino projects.
