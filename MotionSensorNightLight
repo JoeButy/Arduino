@@ -1,0 +1,50 @@
+int ledPin = 13;  // LED on Pin 13 of Arduino
+int pirPin = 7; // Input for HC-S501
+
+int pirValue; // Place to store read PIR Value
+
+
+void setup() {
+  Serial.begin(9600); //VERY IMPORTANT SERIAL PRINT WILL NOT WORKWITHOUT THIS>!@!@@@#$@#$!
+  pinMode(ledPin, OUTPUT); //set led pint
+  pinMode(pirPin, INPUT); //set pir pin
+  digitalWrite(ledPin, LOW); //initialize led as off.
+}
+
+int intensity; //intsneisty variable for ramp down
+int count; //since last motion cycle counter
+
+void loop() {
+  count += 1; //add one to the counter for each loop
+  pirValue = digitalRead(pirPin); //digital input of pir (1 or 0)
+  //analogWrite(ledPin, 0); //turn the light off.
+  Serial.print("count: "); //serial print counter
+  Serial.println(count);
+  Serial.print("2pirValue: "); //serial print pir digital value
+  #define delayTime 500 //step down delay
+  Serial.println(pirValue);
+  if (pirValue > 0)
+  {
+    rampDown(10, 10, 100);
+    intensity = 0;
+    delay(1000); //delay at remaining light intensity
+    analogWrite(ledPin, 0); //light off
+    Serial.println(" -- off2");
+    count = 0; //count reset
+  }
+  analogWrite(ledPin, 0);
+  delay(250);
+}
+
+void rampDown (int steps, int stepSize, int startInt) {
+  for(int i = 0; i < steps; i += 1) 
+    { //scale down intensity loop
+      intensity = startInt-(i*stepSize); //step down the intenisty
+      analogWrite(ledPin, intensity); //set led to intensity
+      delay(delayTime); //wait delay
+      Serial.print("i: "); //print some metrics
+      Serial.print(i);
+      Serial.print(" intensity: ");
+      Serial.println(intensity);
+    }
+}
